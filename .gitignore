@@ -20,6 +20,8 @@ build
 bin
 lib
 cpp
+test
+tests
 */lib/*
 installed
 patched
