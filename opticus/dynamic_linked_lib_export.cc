@@ -8,4 +8,4 @@ extern "C" __declspec(dllexport) void __cdecl myprint(const char* str) {
   printf("%s", str);
 }
 
-} // namespace opticus
+}
