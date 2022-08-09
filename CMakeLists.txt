@@ -11,6 +11,3 @@ endif(NOT CMAKE_CXX_STANDARD)
 
 # Direct link to Opticus.
 add_subdirectory(opticus)
-
-# Direct link to tests.
-add_subdirectory(tests)
