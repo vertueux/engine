@@ -1,0 +1,1 @@
+This extension contains the core engine of Opticus. This counts the elements essential to the functioning of the engine, not including the core at compile time will prevent the engine from working. This extension contains the core engine of Opticus. It contains the export of the engine library to the user, as well as platform / operating system detection.
