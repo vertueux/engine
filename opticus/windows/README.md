@@ -1,0 +1,1 @@
+This extension contains the features of the engine only on windows. It should be included in the compilation only if the user's platform / operating system is Microsoft Windows.
