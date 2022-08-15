@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME} SHARED
   "public/core/export_core_libraries.cc"
   "public/core/dynamic_linked_lib_export.h"
   "public/core/platform_detection.h"
+  "public/core/window.h"
 )
 
 add_compile_definitions(OPTICUS_BUILD_DLL)

@@ -2,7 +2,19 @@
 
 namespace opticus {
 
+enum PlatformEnumerator {
+  E_PLATFORM_WINDOWS = 0,
+  E_PLATFORM_LINUX = 1,
+  E_PLATFORM_MACOS = 2,
+  E_PLATFORM_IOS = 3,
+  E_PLATFORM_ANDROID = 4
+};
+
+static PlatformEnumerator enumerator;
+
 #ifdef _WIN32
+    #include <windows.h>
+	#define OPTICUS_PLATFORM_WINDOWS
 	// Windows x64/x86 
 	#ifdef _WIN64
 		// Windows x64  
