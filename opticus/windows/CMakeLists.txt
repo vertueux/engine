@@ -5,6 +5,8 @@ project(opticus_windows VERSION 0.0.1 LANGUAGES CXX)
 # to the executable or other dynamic linked library files.
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../bin)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # C++ standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_CXX_STANDARD)
   # This project is using C++20
@@ -20,9 +22,8 @@ IF (CMAKE_SYSTEM_NAME MATCHES "windows")
 ENDIF()
 
 add_library(${PROJECT_NAME} SHARED
-
-  # Do not touch.
-  "extension/api/extension_dll_export.h"
+  "public/windows/win32_window.cc"
+  "public/windows/win32_window.h"
 )
 
 add_compile_definitions(OPTICUS_BUILD_DLL)
@@ -36,4 +37,11 @@ target_include_directories(${PROJECT_NAME}
   PRIVATE
     $<INSTALL_INTERFACE:/>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/
+
+    opticus_core
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE 
+    opticus_core 
 )

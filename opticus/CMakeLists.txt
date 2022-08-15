@@ -36,4 +36,9 @@ ENDIF()
 # Direct link to the engine core (Removing it will prevent the engine from working)
 add_subdirectory(core)
 
+if (WIN32)
+  add_subdirectory(windows)
+endif()
+
 ####################################################################
+

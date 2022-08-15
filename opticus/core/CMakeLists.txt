@@ -5,6 +5,8 @@ project(opticus_core VERSION 0.0.1 LANGUAGES CXX)
 # to the executable or other dynamic linked library files.
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../bin)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # C++ standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_CXX_STANDARD)
   # This project is using C++20
@@ -23,10 +25,6 @@ add_library(${PROJECT_NAME} SHARED
   "public/core/export_core_libraries.cc"
   "public/core/dynamic_linked_lib_export.h"
   "public/core/platform_detection.h"
-
-
-  # Do not touch.
-  "extension/api/extension_dll_export.h"
 )
 
 add_compile_definitions(OPTICUS_BUILD_DLL)
