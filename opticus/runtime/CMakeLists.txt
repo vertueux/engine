@@ -24,9 +24,8 @@ ENDIF()
 add_library(${PROJECT_NAME} SHARED
   "public/runtime/engine_runtime.cc"
   "public/runtime/engine_runtime.h"
+  "public/runtime/service_locator.h"
 )
-
-add_compile_definitions(OPTICUS_BUILD_DLL)
 
 set_target_properties(opticus_runtime PROPERTIES LINKER_LANGUAGE CXX)
 

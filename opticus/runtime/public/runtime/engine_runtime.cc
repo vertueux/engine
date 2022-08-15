@@ -1,5 +1,5 @@
 #include "runtime/engine_runtime.h"
-#include "core/service_locator.h"
+#include "runtime/service_locator.h"
 #include "core/platform_detection.h"
 
 #ifdef OPTICUS_PLATFORM_WINDOWS
