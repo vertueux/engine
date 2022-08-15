@@ -36,9 +36,13 @@ ENDIF()
 # Direct link to the engine core (Removing it will prevent the engine from working)
 add_subdirectory(core)
 
-if (WIN32)
+# Direct link to the engine runtime.
+add_subdirectory(runtime)
+
+# Only if the user's platform is Microsoft Windows.
+IF (WIN32)
   add_subdirectory(windows)
-endif()
+ENDIF()
 
 ####################################################################
 
