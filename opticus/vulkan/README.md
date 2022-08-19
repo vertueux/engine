@@ -1,0 +1,1 @@
+This extension contains the tools for rendering with Vulkan. This calls the essential elements that make the engine work, including the core. Not adding it at compile time will prevent the engine from working, except if you are using another rendering API.
