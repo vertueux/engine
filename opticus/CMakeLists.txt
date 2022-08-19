@@ -20,8 +20,6 @@ else (WIN32)
 set(OPTICUS_PLATFORM_NAME OPTICUS_PLATFORM_POSIX)
 endif (WIN32)
 
-find_package(Vulkan REQUIRED)
-
 include_directories(${PROJECT_SOURCE_DIR/})
 
 IF (CMAKE_SYSTEM_NAME MATCHES "windows")
@@ -46,6 +44,7 @@ IF (WIN32)
   add_subdirectory(windows)
 ENDIF()
 
+# For now, Vulkan is the only renderer API supported.
 add_subdirectory(vulkan)
 
 ####################################################################

@@ -7,6 +7,8 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../bin)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+find_package(Vulkan REQUIRED)
+
 # C++ standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_CXX_STANDARD)
   # This project is using C++20
@@ -22,8 +24,9 @@ IF (CMAKE_SYSTEM_NAME MATCHES "windows")
 ENDIF()
 
 add_library(${PROJECT_NAME} SHARED
-  "public/vulkan/vulkan_renderer.cc"
-  "public/vulkan/vulkan_renderer.h"
+  "public/vulkan_renderer/vulkan_renderer.cc"
+  "public/vulkan_renderer/vulkan_renderer.h"
+  "public/vulkan_renderer/vulkan_initialize.h"
 )
 
 set_target_properties(opticus_vulkan PROPERTIES LINKER_LANGUAGE CXX)
@@ -42,6 +45,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     opticus_core 
+    ${Vulkan_LIBRARIES}
 )
 
 IF (WIN32)
