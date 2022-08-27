@@ -13,6 +13,7 @@
 
 #include "core/platform_detection.h"
 #include "core/window.h"
+#include "core/renderer.h"
 
 namespace opticus {
 
@@ -36,12 +37,14 @@ struct VkContext {
   int graphics_idx;
 };
 
-class OPTRenderer {
+class VulkanRenderer : public opticus::Renderer {
  public:
-  bool initialize_renderer(VkContext *vk_context, Win32Window window);
-  bool render(VkContext *vk_context);
-  
-  static VkContext context;
+  virtual bool initialize_renderer() override;
+  virtual bool render() override;
+
+ private:
+  Win32Window window;
+  VkContext *private_context;
 };
 
 }

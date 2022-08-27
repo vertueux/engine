@@ -7,6 +7,8 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../bin)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+find_package(Vulkan REQUIRED)
+
 # C++ standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_CXX_STANDARD)
   # This project is using C++20
@@ -37,11 +39,15 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:/>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/
     opticus_core 
+    ${Vulkan_INCLUDE_DIRS}
+    opticus_vulkan
 )
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     opticus_core 
+    ${Vulkan_LIBRARIES}
+    opticus_vulkan
 )
 
 IF (WIN32)

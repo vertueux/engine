@@ -10,7 +10,6 @@ namespace opticus {
 LRESULT CALLBACK Win32Window::window_process(HWND hWnd, UINT message, WPARAM wparam, LPARAM lparam) {
   switch (message) {
   case WM_DESTROY:
-    is_running = false;
 	  PostQuitMessage(0);
 	  break;
   }

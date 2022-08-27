@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME} SHARED
   "public/core/export_core_libraries.cc"
   "public/core/platform_detection.h"
   "public/core/window.h"
+  "public/core/renderer.h"
 )
 
 set_target_properties(opticus_core PROPERTIES LINKER_LANGUAGE CXX)

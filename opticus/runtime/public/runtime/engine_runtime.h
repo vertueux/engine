@@ -7,6 +7,8 @@ class Engine {
   Engine();
   
   void run();
+
+  bool is_running = true;
 };
 
 } // namespace opticus

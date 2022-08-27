@@ -1,3 +1,5 @@
+#include "vulkan_renderer/vulkan_renderer.h"
+
 #include "runtime/engine_runtime.h"
 #include "runtime/service_locator.h"
 #include "core/platform_detection.h"
@@ -11,18 +13,29 @@
 namespace opticus {
 
 Engine::Engine() {
-  switch (opticus::enumerator) {
-    case opticus::E_PLATFORM_WINDOWS:
-      opticus::ServiceLocator::provide(new Win32Window);
+  switch (enumerator) {
+    case E_PLATFORM_WINDOWS:
+      ServiceLocator::provide_window(new Win32Window);
       break;
     default:
       return;
   }
+
+  ServiceLocator::provide_renderer(new VulkanRenderer);
 }
 
 void Engine::Engine::run() {
-  opticus::ServiceLocator::get_window()->open_window();
-  opticus::ServiceLocator::get_window()->update_window();
+  ServiceLocator::get_window()->open_window();
+
+  if (!ServiceLocator::get_renderer()->initialize_renderer()) 
+    return;
+    
+  while (is_running) {
+    ServiceLocator::get_window()->update_window();
+
+    if (!ServiceLocator::get_renderer()->render()) 
+      return;
+  }
 }
 
 } // namespace opticus
