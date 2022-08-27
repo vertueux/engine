@@ -184,4 +184,59 @@ bool OPTRenderer::initialize_renderer(VkContext* vk_context, Win32Window window)
     return true;
 }
 
+bool OPTRenderer::render(VkContext *vk_context)
+{
+    uint32_t img_idx;
+    VK_CHECK(vkAcquireNextImageKHR(vk_context->device, vk_context->swap_chain, 0, vk_context->aquire_semaphore, 0, &img_idx));
+
+    VkCommandBuffer cmd;
+    VkCommandBufferAllocateInfo alloc_info = {};
+    alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    alloc_info.commandBufferCount = 1;
+    alloc_info.commandPool = vk_context->command_pool;
+    VK_CHECK(vkAllocateCommandBuffers(vk_context->device, &alloc_info, &cmd));
+
+    VkCommandBufferBeginInfo begin_info = OPTRenderInit::cmd_begin_info();
+    VK_CHECK(vkBeginCommandBuffer(cmd, &begin_info));
+
+    // Rendering Commands
+    {
+        VkClearColorValue color = {1, 1, 0, 1};
+        VkImageSubresourceRange range = {};
+        range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        range.layerCount = 1;
+        range.levelCount = 1;
+
+        vkCmdClearColorImage(cmd, vk_context->sc_images[img_idx], VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, &color, 1, &range);
+    }
+
+    VK_CHECK(vkEndCommandBuffer(cmd));
+
+    VkPipelineStageFlags wait_stage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
+    VkSubmitInfo submit_info = {};
+    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submit_info.pWaitDstStageMask = &wait_stage;
+    submit_info.commandBufferCount = 1;
+    submit_info.pCommandBuffers = &cmd;
+    submit_info.pSignalSemaphores = &vk_context->submit_semaphore;
+    submit_info.signalSemaphoreCount = 1;
+    submit_info.pWaitSemaphores = &vk_context->aquire_semaphore;
+    submit_info.waitSemaphoreCount = 1;
+    VK_CHECK(vkQueueSubmit(vk_context->graphics_queue, 1, &submit_info, 0));
+
+    VkPresentInfoKHR present_info = {};
+    present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    present_info.pSwapchains = &vk_context->swap_chain;
+    present_info.swapchainCount = 1;
+    present_info.pImageIndices = &img_idx;
+    present_info.pWaitSemaphores = &vk_context->submit_semaphore;
+    present_info.waitSemaphoreCount = 1;
+    VK_CHECK(vkQueuePresentKHR(vk_context->graphics_queue, &present_info));
+
+    vkFreeCommandBuffers(vk_context->device, vk_context->command_pool, 1, &cmd);
+
+    return true;
+}
+
 }

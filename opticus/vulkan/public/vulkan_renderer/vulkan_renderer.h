@@ -38,8 +38,10 @@ struct VkContext {
 
 class OPTRenderer {
  public:
-   bool initialize_renderer(VkContext *vk_context, Win32Window window);
+  bool initialize_renderer(VkContext *vk_context, Win32Window window);
+  bool render(VkContext *vk_context);
   
+  static VkContext context;
 };
 
 }

@@ -27,7 +27,7 @@ namespace opticus {
 
 class OPTRenderInit {
  public:
-  VkCommandBufferBeginInfo cmd_begin_info()
+  static VkCommandBufferBeginInfo cmd_begin_info()
   {
     VkCommandBufferBeginInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
