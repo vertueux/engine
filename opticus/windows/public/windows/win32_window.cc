@@ -63,4 +63,12 @@ void Win32Window::update_window() {
   }
 }
 
+void Win32Window::get_window_size(uint32_t *width, uint32_t* height) {
+  RECT rect;
+  GetClientRect(hWnd, &rect);
+
+  *width = rect.right - rect.left;
+  *height = rect.bottom - rect.top;
+}
+
 } // namespace opticus

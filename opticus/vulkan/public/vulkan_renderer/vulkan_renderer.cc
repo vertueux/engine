@@ -5,6 +5,8 @@ namespace opticus {
   
 // Win32Window will be modified later to make it platform specific.
 bool VulkanRenderer::initialize_renderer() {
+  window.get_window_size(&private_context->screen_size.width, &private_context->screen_size.height);
+
   VkApplicationInfo app_info = {};
   app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
   app_info.pApplicationName = "Application";
@@ -165,6 +167,67 @@ bool VulkanRenderer::initialize_renderer() {
 
       VK_CHECK(vkGetSwapchainImagesKHR(private_context->device, private_context->swap_chain, &private_context->sc_img_count, 0));
       VK_CHECK(vkGetSwapchainImagesKHR(private_context->device, private_context->swap_chain, &private_context->sc_img_count, private_context->sc_images));
+
+      {
+        VkImageViewCreateInfo view_info = {};
+        view_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        view_info.format = private_context->surface_format.format;
+        view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        view_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        view_info.subresourceRange.layerCount = 1;
+        view_info.subresourceRange.levelCount = 1;
+      
+        for (uint32_t i = 0; i < private_context->sc_img_count; i++) {
+          view_info.image = private_context->sc_images[i];
+          VK_CHECK(vkCreateImageView(private_context->device, &view_info, 0, &private_context->sc_images_views[i]));
+        }
+      }
+    }
+
+    {
+      VkAttachmentDescription attachment = {};
+      attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+      attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+      attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+      attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+      attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+      attachment.format = private_context->surface_format.format;
+
+      VkAttachmentReference color_attachment_reference = {};
+      color_attachment_reference.attachment = 0;
+      color_attachment_reference.layout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+
+      VkSubpassDescription sub_pass_description = {};
+      sub_pass_description.colorAttachmentCount = 1;
+      sub_pass_description.pColorAttachments = &color_attachment_reference;
+
+      VkAttachmentDescription attachments[] = {attachment};
+
+      VkRenderPassCreateInfo rp_info = {};
+      rp_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+      rp_info.pAttachments = &attachment;
+      rp_info.attachmentCount = ArraySize(attachments);
+      rp_info.subpassCount = 1;
+      rp_info.pSubpasses = &sub_pass_description;
+      vkCreateRenderPass(private_context->device, &rp_info, 0, &private_context->render_pass);
+
+      VK_CHECK(vkCreateRenderPass(private_context->device, &rp_info, 0, &private_context->render_pass));
+    }
+
+    {
+      VkFramebufferCreateInfo frame_buffer_info = {};
+      frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+      frame_buffer_info.width = private_context->screen_size.width;
+      frame_buffer_info.height = private_context->screen_size.height;
+      frame_buffer_info.renderPass = private_context->render_pass;
+      frame_buffer_info.layers = 1;
+      frame_buffer_info.attachmentCount = 1;
+
+      for (uint32_t i = 0; i < private_context->sc_img_count; i++) {
+        frame_buffer_info.pAttachments = &private_context->sc_images_views[i];
+        VK_CHECK(vkCreateFramebuffer(private_context->device, &frame_buffer_info, 0, &private_context->frame_buffers[i]));
+      }
+
     }
 
     {
@@ -199,16 +262,20 @@ bool VulkanRenderer::render()
   VkCommandBufferBeginInfo begin_info = OPTRenderInit::cmd_begin_info();
   VK_CHECK(vkBeginCommandBuffer(cmd, &begin_info));
 
-  // Rendering Commands
-  {
-    VkClearColorValue color = {1, 1, 0, 1};
-    VkImageSubresourceRange range = {};
-    range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    range.layerCount = 1;
-    range.levelCount = 1;
+  VkClearValue clear_value = {};
+  clear_value.color = {1, 1, 0, 1};
 
-    vkCmdClearColorImage(cmd, private_context->sc_images[img_idx], VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, &color, 1, &range);
-  }
+  VkRenderPassBeginInfo rp_begin_info = {};
+  rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  rp_begin_info.renderPass = private_context->render_pass;
+  rp_begin_info.renderArea.extent = private_context->screen_size;
+  rp_begin_info.framebuffer = private_context->frame_buffers[img_idx];
+  rp_begin_info.pClearValues = &clear_value;
+  rp_begin_info.clearValueCount = 1;
+
+  vkCmdBeginRenderPass(cmd, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
+
+  vkCmdEndRenderPass(cmd);
 
   VK_CHECK(vkEndCommandBuffer(cmd));
 
@@ -234,6 +301,7 @@ bool VulkanRenderer::render()
   present_info.waitSemaphoreCount = 1;
   VK_CHECK(vkQueuePresentKHR(private_context->graphics_queue, &present_info));
 
+  vkDeviceWaitIdle(private_context->device);
   vkFreeCommandBuffers(private_context->device, private_context->command_pool, 1, &cmd);
 
   return true;

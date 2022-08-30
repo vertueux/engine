@@ -18,6 +18,7 @@
 namespace opticus {
 
 struct VkContext {
+  VkExtent2D screen_size;
   VkInstance instance;
   VkDebugUtilsMessengerEXT debug_messenger;
   VkSurfaceKHR surface;
@@ -26,6 +27,7 @@ struct VkContext {
   VkDevice device;
   VkQueue graphics_queue;
   VkSwapchainKHR swap_chain;
+  VkRenderPass render_pass;
   VkCommandPool command_pool;
 
   VkSemaphore aquire_semaphore;
@@ -33,6 +35,9 @@ struct VkContext {
 
   uint32_t sc_img_count;
   VkImage sc_images[5];
+  VkImageView sc_images_views[5];
+  
+  VkFramebuffer frame_buffers[5];
 
   int graphics_idx;
 };

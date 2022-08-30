@@ -10,6 +10,7 @@ class Win32Window : public opticus::Window {
   virtual void open_window() override;
   virtual void update_window() override;
 
+  void get_window_size(uint32_t *width, uint32_t* height);
   HWND hWnd;
  private:
   int width = 1300;
