@@ -50,5 +50,8 @@ ENDIF()
 # For now, Vulkan is the only renderer API supported.
 add_subdirectory(vulkan)
 
+# Direct link to the logger.
+add_subdirectory(logger)
+
 ####################################################################
 

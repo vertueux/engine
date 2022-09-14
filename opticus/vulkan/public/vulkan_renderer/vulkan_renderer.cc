@@ -9,7 +9,7 @@ bool VulkanRenderer::initialize_renderer() {
 
   VkApplicationInfo app_info = {};
   app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-  app_info.pApplicationName = "Application";
+  app_info.pApplicationName = "Opticus Application";
   app_info.pEngineName = "Opticus";
 
   const char *extensions[] = {
