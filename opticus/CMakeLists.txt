@@ -39,6 +39,9 @@ add_subdirectory(core)
 # Direct link to the engine runtime.
 add_subdirectory(runtime)
 
+# Direct link to the engine application templates.
+add_subdirectory(application)
+
 # Only if the user's platform is Microsoft Windows.
 IF (WIN32)
   add_subdirectory(windows)
