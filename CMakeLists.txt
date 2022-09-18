@@ -14,3 +14,6 @@ add_subdirectory(opticus)
 
 # Direct link to samples.
 add_subdirectory(samples)
+
+# External tools
+add_subdirectory(tools/glfw)

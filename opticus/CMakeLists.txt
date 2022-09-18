@@ -45,6 +45,9 @@ add_subdirectory(application)
 # Only if the user's platform is Microsoft Windows.
 IF (WIN32)
   add_subdirectory(windows)
+ELSE()
+  # Direct link to the POSIX windowing system (Glfw).
+  add_subdirectory(posix)
 ENDIF()
 
 # For now, Vulkan is the only renderer API supported.

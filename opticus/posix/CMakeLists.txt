@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.9)
-project(opticus_runtime VERSION 0.0.1 LANGUAGES CXX)
+project(opticus_posix VERSION 0.0.1 LANGUAGES CXX)
 
 # [TO ADAPT] To make DLL export work, you have to put the .dll file next
 # to the executable or other dynamic linked library files.
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../bin)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-find_package(Vulkan REQUIRED)
 
 # C++ standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_CXX_STANDARD)
@@ -24,12 +22,13 @@ IF (CMAKE_SYSTEM_NAME MATCHES "windows")
 ENDIF()
 
 add_library(${PROJECT_NAME} SHARED
-  "public/runtime/engine_runtime.cc"
-  "public/runtime/engine_runtime.h"
-  "public/runtime/service_locator.h"
+  "public/posix/posix_window.cc"
+  "public/posix/posix_window.h"
 )
 
-set_target_properties(opticus_runtime PROPERTIES LINKER_LANGUAGE CXX)
+add_compile_definitions(OPTICUS_BUILD_DLL)
+
+set_target_properties(opticus_windows PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -38,34 +37,13 @@ target_include_directories(${PROJECT_NAME}
   PRIVATE
     $<INSTALL_INTERFACE:/>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/
-    opticus_core 
-    ${Vulkan_INCLUDE_DIRS}
-    opticus_vulkan
+
+    opticus_core
+    glfw
 )
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     opticus_core 
-    ${Vulkan_LIBRARIES}
-    opticus_vulkan
+    glfw
 )
-
-IF (WIN32)
-  target_include_directories(${PROJECT_NAME} PRIVATE
-    opticus_windows
-  )
-ELSE()
-  target_include_directories(${PROJECT_NAME} PRIVATE
-    opticus_posix
-  )
-ENDIF()
-
-IF (WIN32)
-  target_link_libraries(${PROJECT_NAME} PRIVATE 
-    opticus_windows
-  )
-ELSE() 
-  target_link_libraries(${PROJECT_NAME} PRIVATE 
-    opticus_posix
-  )    
-ENDIF()

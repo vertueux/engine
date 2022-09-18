@@ -6,6 +6,8 @@
 
 #ifdef OPTICUS_PLATFORM_WINDOWS
   #include "windows/win32_window.h"
+#else 
+  #include "posix/posix_window.h"
 #endif
 
 #include <iostream>
@@ -18,6 +20,7 @@ Engine::Engine() {
       ServiceLocator::provide_window(new Win32Window);
       break;
     default:
+      // ServiceLocator::provide_window(new PosixWindow);
       return;
   }
 

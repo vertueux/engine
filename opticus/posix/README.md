@@ -1,0 +1,1 @@
+Opticus is currently using GLFW for cross platform window system.

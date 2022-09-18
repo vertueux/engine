@@ -52,10 +52,18 @@ IF (WIN32)
   target_include_directories(${PROJECT_NAME} PRIVATE
     opticus_windows
   )
+ELSE()
+  target_include_directories(${PROJECT_NAME} PRIVATE
+    opticus_posix
+  )
 ENDIF()
 
 IF (WIN32)
   target_link_libraries(${PROJECT_NAME} PRIVATE 
     opticus_windows
   )
+ELSE() 
+  target_link_libraries(${PROJECT_NAME} PRIVATE 
+    opticus_posix
+  )    
 ENDIF()
