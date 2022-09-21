@@ -59,5 +59,8 @@ add_subdirectory(logger)
 # Direct link to the event system. 
 add_subdirectory(events)
 
+# Direct link to the camera system.
+add_subdirectory(camera)
+
 ####################################################################
 
