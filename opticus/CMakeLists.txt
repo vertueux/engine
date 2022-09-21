@@ -33,7 +33,7 @@ ENDIF()
 #                                                                  #
 #################################################################### 
 
-# Direct link to the engine core (Removing it will prevent the engine from working)
+# Direct link to the engine core (Removing it will prevent the engine from working).
 add_subdirectory(core)
 
 # Direct link to the engine runtime.
@@ -46,7 +46,7 @@ add_subdirectory(application)
 IF (WIN32)
   add_subdirectory(windows)
 ELSE()
-  # Direct link to the POSIX windowing system (Glfw).
+  # Direct link to the POSIX windowing system (GLFW).
   add_subdirectory(posix)
 ENDIF()
 
@@ -55,6 +55,9 @@ add_subdirectory(vulkan)
 
 # Direct link to the logger.
 add_subdirectory(logger)
+
+# Direct link to the event system. 
+add_subdirectory(events)
 
 ####################################################################
 
