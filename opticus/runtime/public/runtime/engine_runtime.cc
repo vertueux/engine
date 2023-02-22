@@ -24,20 +24,20 @@ Engine::Engine() {
       return;
   }
 
-  ServiceLocator::provide_renderer(new VulkanRenderer);
+  // ServiceLocator::provide_renderer(new VulkanRenderer);
 }
 
 void Engine::Engine::run() {
   ServiceLocator::get_window()->open_window();
 
-  if (!ServiceLocator::get_renderer()->initialize_renderer()) 
+  // if (!ServiceLocator::get_renderer()->initialize_renderer()) 
     return;
     
   while (is_running) {
     ServiceLocator::get_window()->update_window();
 
-    if (!ServiceLocator::get_renderer()->render()) 
-      return;
+    // if (!ServiceLocator::get_renderer()->render()) 
+      // return;
   }
 }
 
